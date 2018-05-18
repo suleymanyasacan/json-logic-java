@@ -31,12 +31,45 @@ class EqualsNode extends BinaryNode {
     Result eval(Map<String, Result> data) throws EvaluationException {
         Result leftResult = left.eval(data);
         Result rightResult = right.eval(data);
-        if (leftResult.isBoolean() && rightResult.isBoolean()) {
-            return new Result(leftResult.getBooleanValue() == rightResult.getBooleanValue());
+        if (leftResult.isBoolean())
+            if(rightResult.isBoolean()) {
+                return new Result(leftResult.getBooleanValue() == rightResult.getBooleanValue());
+            }
+            else if(rightResult.isLong())
+            {
+                if(rightResult.getLongValue()>1||rightResult.getLongValue()<0)
+                    throw new EvaluationException("fffffff");
+                else
+                    return new Result(leftResult.getBooleanValue() == (rightResult.getLongValue()>0));
+            }
+
+        if (leftResult.isLong())
+            if(rightResult.isLong())
+                return new Result(leftResult.getLongValue() == rightResult.getLongValue());
+            else if(rightResult.isBoolean())
+            {
+                if(leftResult.getLongValue()>1||leftResult.getLongValue()<0)
+                    throw new EvaluationException("fffffff");
+                else
+                    return new Result((leftResult.getLongValue()>0) == rightResult.getBooleanValue());
+
+            }
+
+
+        if(leftResult.isLong()&&rightResult.isString())
+        {
+            Long temp=new Long(rightResult.getStringValue());
+
+            return new Result(leftResult.getLongValue() == temp);
         }
-        if (leftResult.isLong() && rightResult.isLong()) {
-            return new Result(leftResult.getLongValue() == rightResult.getLongValue());
+
+        if(rightResult.isLong()&&leftResult.isString())
+        {
+            Long temp=new Long(leftResult.getStringValue());
+
+            return new Result(rightResult.getLongValue() == temp);
         }
+
         return null;
     }
 

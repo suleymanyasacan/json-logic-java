@@ -74,11 +74,26 @@ public class JsonLogic {
                         case "==":
                             tree = parseEquals(jsonReader);
                             break;
+                        case "===":
+                            tree = parseStrictEquals(jsonReader);
+                            break;
+                        case "!=":
+                            tree = parseNotEquals(jsonReader);
+                            break;
+                        case "!==":
+                            tree = parseStrictNotEquals(jsonReader);
+                            break;
                         case ">":
                             tree = parseGreaterThan(jsonReader);
                             break;
+                        case ">=":
+                            tree = parseGreaterThanEquals(jsonReader);
+                            break;
                         case "<":
                             tree = parseLessThan(jsonReader);
+                            break;
+                        case "<=":
+                            tree = parseLessThanEquals(jsonReader);
                             break;
                         case "and":
                             tree = parseAnd(jsonReader);
@@ -139,6 +154,54 @@ public class JsonLogic {
         return tree;
     }
 
+    private Node parseStrictEquals(JsonReader jsonReader) throws ParseException {
+        Node tree = null;
+        try {
+
+            JsonToken token = jsonReader.peek();
+            if (token == JsonToken.BEGIN_ARRAY) {
+                jsonReader.beginArray();
+                tree = new StrictEqualsNode(parse(jsonReader), parse(jsonReader));
+                jsonReader.endArray();
+            }
+        } catch (IOException ex) {
+            throw new ParseException(ex.getMessage(), ex);
+        }
+        return tree;
+    }
+
+    private Node parseStrictNotEquals(JsonReader jsonReader) throws ParseException {
+        Node tree = null;
+        try {
+
+            JsonToken token = jsonReader.peek();
+            if (token == JsonToken.BEGIN_ARRAY) {
+                jsonReader.beginArray();
+                tree = new StrictNotEqualsNode(parse(jsonReader), parse(jsonReader));
+                jsonReader.endArray();
+            }
+        } catch (IOException ex) {
+            throw new ParseException(ex.getMessage(), ex);
+        }
+        return tree;
+    }
+
+    private Node parseNotEquals(JsonReader jsonReader) throws ParseException {
+        Node tree = null;
+        try {
+
+            JsonToken token = jsonReader.peek();
+            if (token == JsonToken.BEGIN_ARRAY) {
+                jsonReader.beginArray();
+                tree = new NotEqualsNode(parse(jsonReader), parse(jsonReader));
+                jsonReader.endArray();
+            }
+        } catch (IOException ex) {
+            throw new ParseException(ex.getMessage(), ex);
+        }
+        return tree;
+    }
+
     private Node parseGreaterThan(JsonReader jsonReader) throws ParseException {
         Node tree = null;
         try {
@@ -154,14 +217,72 @@ public class JsonLogic {
         return tree;
     }
 
+    private Node parseGreaterThanEquals(JsonReader jsonReader) throws ParseException {
+        Node tree = null;
+        try {
+            JsonToken token = jsonReader.peek();
+            if (token == JsonToken.BEGIN_ARRAY) {
+                jsonReader.beginArray();
+                tree = new GreaterThanEqualsNode(parse(jsonReader), parse(jsonReader));
+                jsonReader.endArray();
+            }
+        } catch (IOException ex) {
+            throw new ParseException(ex.getMessage(), ex);
+        }
+        return tree;
+    }
+
     private Node parseLessThan(JsonReader jsonReader) throws ParseException {
         Node tree = null;
         try {
             JsonToken token = jsonReader.peek();
             if (token == JsonToken.BEGIN_ARRAY) {
                 jsonReader.beginArray();
-                tree = new LessThanNode(parse(jsonReader), parse(jsonReader));
-                jsonReader.endArray();
+
+                Node node1=parse(jsonReader);
+                Node node2=parse(jsonReader);
+
+                tree = new LessThanNode(node1, node2);
+                try {
+                    jsonReader.endArray();
+                }catch (IllegalStateException e){
+                    Node node3=parse(jsonReader);
+
+                    jsonReader.endArray();
+
+                    tree=new BetweenNode(node1,node2,node3);
+                }
+
+            }
+        } catch (IOException ex) {
+            throw new ParseException(ex.getMessage(), ex);
+        }
+        return tree;
+    }
+
+    private Node parseLessThanEquals(JsonReader jsonReader) throws ParseException {
+        Node tree = null;
+        try {
+            JsonToken token = jsonReader.peek();
+            if (token == JsonToken.BEGIN_ARRAY) {
+                jsonReader.beginArray();
+
+                Node node1=parse(jsonReader);
+                Node node2=parse(jsonReader);
+
+                tree = new LessThanEqualsNode(node1, node2);
+                try {
+                    jsonReader.endArray();
+                }catch (IllegalStateException e){
+                    Node node3=parse(jsonReader);
+
+                    jsonReader.endArray();
+
+                    tree=new BetweenEqualsLeftNode(node1,node2,node3);
+                }
+
+
+
             }
         } catch (IOException ex) {
             throw new ParseException(ex.getMessage(), ex);

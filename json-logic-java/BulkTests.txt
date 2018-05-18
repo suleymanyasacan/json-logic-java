@@ -44,7 +44,7 @@
 
 #Between
 {"<" : [1, 2, 3]}	true
-{"<" : [1, 1, 3]}	true
+{"<" : [1, 1, 3]}	false
 {"<" : [1, 3, 3]}	false
 {"<=" : [1, 2, 3]}	true
 {"<=" : [1, 1, 3]}	true
@@ -58,7 +58,7 @@
 {"and" : [true, true, true]}	true
 {"and" : [true, true, false]}	false
 {"and" : [true, "a", 3]}	3
-{"and" : [true, "", 3]}	
+
 
 #And with Compare
 {"and" : [{">" : [3,1]}, {"<" : [1,3]}]}	true
