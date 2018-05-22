@@ -131,6 +131,9 @@ public class JsonLogic {
                         case "var":
                             tree = parseVar(jsonReader);
                             break;
+                        case "missing":
+                            tree = parseMissing(jsonReader);
+                            break;
                         case "log":
                             tree = parseLog(jsonReader);
                             break;
@@ -619,6 +622,29 @@ public class JsonLogic {
             throw new ParseException(ex.getMessage(), ex);
         }
         return node;
+    }
+
+    private Node parseMissing(JsonReader jsonReader) throws ParseException {
+
+        try {
+            JsonToken token = jsonReader.peek();
+            if (null != token) {
+                switch (token) {
+                    case BEGIN_ARRAY:
+                        MissingNode missingNode=null;
+                        jsonReader.beginArray();
+                        missingNode = new MissingNode(parse(jsonReader), parse(jsonReader));
+                        while (jsonReader.peek() != JsonToken.END_ARRAY) {
+                            missingNode.add(parse(jsonReader));
+                        }
+                        jsonReader.endArray();
+                        return missingNode;
+                }
+            }
+        } catch (IOException ex) {
+            throw new ParseException(ex.getMessage(), ex);
+        }
+        return null;
     }
 
     private Node parseLog(JsonReader jsonReader) throws ParseException {

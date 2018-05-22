@@ -15,6 +15,8 @@
  */
 package com.northernwall.jsonLogic;
 
+import com.google.gson.JsonArray;
+
 /**
  *
  * @author Richard
@@ -36,6 +38,9 @@ public class Result {
     }
 
     public boolean getBooleanValue() {
+        if(!isBoolean()&& value instanceof JsonArray &&((JsonArray)value).size()==0)
+            return false;
+
         return ((Boolean)value).booleanValue();
     }
     
