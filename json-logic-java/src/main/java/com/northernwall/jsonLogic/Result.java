@@ -38,8 +38,25 @@ public class Result {
     }
 
     public boolean getBooleanValue() {
-        if(!isBoolean()&& value instanceof JsonArray &&((JsonArray)value).size()==0)
-            return false;
+        if(!isBoolean())
+            if(value == null)
+                return false;
+            else if( value instanceof JsonArray)
+                if (((JsonArray)value).size()==0)
+                    return false;
+                else
+                    return true;
+            else if(isDouble())
+                if(getDoubleValue()== 0)
+                    return false;
+                else
+                    return true;
+            else if(isString())
+                if(getStringValue().isEmpty())
+                    return false;
+                else
+                    return true;
+
 
         return ((Boolean)value).booleanValue();
     }
