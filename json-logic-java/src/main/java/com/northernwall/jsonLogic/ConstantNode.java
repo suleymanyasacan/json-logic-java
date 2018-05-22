@@ -43,8 +43,8 @@ class ConstantNode extends Node {
     void treeToString(StringBuilder builder) {
         if (result.isBoolean()) {
             builder.append(result.getBooleanValue());
-        } else if (result.isLong()) {
-            builder.append(result.getLongValue());
+        } else if (result.isDouble()) {
+            builder.append(result.getDoubleValue());
         } else if (result.isString()) {
             builder.append("\"");
             builder.append(result.getStringValue());

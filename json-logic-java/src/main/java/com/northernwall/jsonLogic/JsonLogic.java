@@ -107,6 +107,27 @@ public class JsonLogic {
                         case "if":
                             tree = parseIf(jsonReader);
                             break;
+                        case "max":
+                            tree = parseMax(jsonReader);
+                            break;
+                        case "min":
+                            tree = parseMin(jsonReader);
+                            break;
+                        case "+":
+                            tree = parseAddition(jsonReader);
+                            break;
+                        case "*":
+                            tree = parseMultiplication(jsonReader);
+                            break;
+                        case "-":
+                            tree = parseSubtraction(jsonReader);
+                            break;
+                        case "/":
+                            tree = parseDivision(jsonReader);
+                            break;
+                        case "%":
+                            tree = parseModulo(jsonReader);
+                            break;
                         case "var":
                             tree = parseVar(jsonReader);
                             break;
@@ -377,6 +398,187 @@ public class JsonLogic {
         }
         return ifNode;
     }
+
+    private Node parseMax(JsonReader jsonReader) throws ParseException {
+        MaxNode maxNode = null;
+        try {
+            JsonToken token = jsonReader.peek();
+            if (null != token) {
+                switch (token) {
+                    case BEGIN_ARRAY:
+                        jsonReader.beginArray();
+                        maxNode = new MaxNode(parse(jsonReader), parse(jsonReader));
+                        while (jsonReader.peek() != JsonToken.END_ARRAY) {
+                            maxNode.add(parse(jsonReader));
+                        }
+                        jsonReader.endArray();
+                        break;
+                }
+            }
+        } catch (IOException ex) {
+            throw new ParseException(ex.getMessage(), ex);
+        }
+        return maxNode;
+    }
+
+    private Node parseMin(JsonReader jsonReader) throws ParseException {
+        MinNode node = null;
+        try {
+            JsonToken token = jsonReader.peek();
+            if (null != token) {
+                switch (token) {
+                    case BEGIN_ARRAY:
+                        jsonReader.beginArray();
+                        node = new MinNode(parse(jsonReader), parse(jsonReader));
+                        while (jsonReader.peek() != JsonToken.END_ARRAY) {
+                            node.add(parse(jsonReader));
+                        }
+                        jsonReader.endArray();
+                        break;
+                }
+            }
+        } catch (IOException ex) {
+            throw new ParseException(ex.getMessage(), ex);
+        }
+        return node;
+    }
+
+    private Node parseAddition(JsonReader jsonReader) throws ParseException {
+
+        try {
+            JsonToken token = jsonReader.peek();
+            if (null != token) {
+                switch (token) {
+                    case BEGIN_ARRAY:
+                        AdditionNode additionNode=null;
+                        jsonReader.beginArray();
+                        additionNode = new AdditionNode(parse(jsonReader), parse(jsonReader));
+                        while (jsonReader.peek() != JsonToken.END_ARRAY) {
+                            additionNode.add(parse(jsonReader));
+                        }
+                        jsonReader.endArray();
+                        return additionNode;
+                    case STRING:
+                        return new AdditionCastingOverloadNode(parse(jsonReader));
+
+//                        StringBuilder builder = new StringBuilder();
+//                        node.treeToString(builder);
+//                        System.out.println("Before: " + builder.toString());
+//                        //Result result = node.eval(data);
+//                        System.out.println("After: " + builder.toString());
+
+                }
+            }
+        } catch (IOException ex) {
+            throw new ParseException(ex.getMessage(), ex);
+        }
+        return null;
+    }
+
+
+    private Node parseMultiplication(JsonReader jsonReader) throws ParseException {
+
+        try {
+            JsonToken token = jsonReader.peek();
+            if (null != token) {
+                switch (token) {
+                    case BEGIN_ARRAY:
+                        jsonReader.beginArray();
+                        MultiplicationNode multiplicationNode = new MultiplicationNode(parse(jsonReader), parse(jsonReader));
+                        while (jsonReader.peek() != JsonToken.END_ARRAY) {
+                            multiplicationNode.add(parse(jsonReader));
+                        }
+                        jsonReader.endArray();
+                        return multiplicationNode;
+                }
+            }
+        } catch (IOException ex) {
+            throw new ParseException(ex.getMessage(), ex);
+        }
+        return null;
+    }
+
+
+    private Node parseSubtraction(JsonReader jsonReader) throws ParseException {
+
+        try {
+            JsonToken token = jsonReader.peek();
+            if (null != token) {
+                switch (token) {
+                    case BEGIN_ARRAY:
+                        jsonReader.beginArray();
+
+                        Node node1=parse(jsonReader);
+                        Node node2=null;
+
+                        try {
+                            node2=parse(jsonReader);
+
+                        }catch (Exception ex){
+                            ex.printStackTrace();
+                        }
+
+                        Node tree = null;
+                        if(node2!=null)
+                            tree= new SubtractionNode(node1, node2);
+                        else
+                            tree= new SubtractionNegatingOverloadNode(node1);
+
+                        jsonReader.endArray();
+                        return tree;
+
+
+//                        SubtractionNode subtractionNode=null;
+//                        jsonReader.beginArray();
+//                        subtractionNode = new SubtractionNode(parse(jsonReader), parse(jsonReader));
+//                        while (jsonReader.peek() != JsonToken.END_ARRAY) {
+//                            subtractionNode.add(parse(jsonReader));
+//                        }
+//                        jsonReader.endArray();
+//                        return subtractionNode;
+                    case STRING:
+                        return new AdditionCastingOverloadNode(parse(jsonReader));
+                }
+            }
+        } catch (IOException ex) {
+            throw new ParseException(ex.getMessage(), ex);
+        }
+        return null;
+    }
+
+    private Node parseDivision(JsonReader jsonReader) throws ParseException {
+        Node tree = null;
+        try {
+
+            JsonToken token = jsonReader.peek();
+            if (token == JsonToken.BEGIN_ARRAY) {
+                jsonReader.beginArray();
+                tree = new DivisionNode(parse(jsonReader), parse(jsonReader));
+                jsonReader.endArray();
+            }
+        } catch (IOException ex) {
+            throw new ParseException(ex.getMessage(), ex);
+        }
+        return tree;
+    }
+
+    private Node parseModulo(JsonReader jsonReader) throws ParseException {
+        Node tree = null;
+        try {
+
+            JsonToken token = jsonReader.peek();
+            if (token == JsonToken.BEGIN_ARRAY) {
+                jsonReader.beginArray();
+                tree = new ModuloNode(parse(jsonReader), parse(jsonReader));
+                jsonReader.endArray();
+            }
+        } catch (IOException ex) {
+            throw new ParseException(ex.getMessage(), ex);
+        }
+        return tree;
+    }
+
+
 
     private Node parseVar(JsonReader jsonReader) throws ParseException {
         Node node = null;

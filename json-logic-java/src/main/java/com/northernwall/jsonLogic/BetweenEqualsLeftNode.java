@@ -40,9 +40,9 @@ class BetweenEqualsLeftNode extends BinaryNode {
         Result leftResult = left.eval(data);
         Result middleResult = middle.eval(data);
         Result rightResult = right.eval(data);
-        if (leftResult.isLong() && rightResult.isLong()&&middleResult.isLong()) {
-            return new Result(leftResult.getLongValue() <= middleResult.getLongValue()
-            &&middleResult.getLongValue()<rightResult.getLongValue());
+        if (leftResult.isDouble() && rightResult.isDouble()&&middleResult.isDouble()) {
+            return new Result(leftResult.getDoubleValue() <= middleResult.getDoubleValue()
+            &&middleResult.getDoubleValue()<rightResult.getDoubleValue());
         }
         return null;
     }

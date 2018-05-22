@@ -75,7 +75,7 @@ public class JsonLogicTree {
         JsonToken token = jsonReader.peek();
         switch (token) {
             case NUMBER:
-                temp.put(name, new Result(jsonReader.nextLong()));
+                temp.put(name, new Result(jsonReader.nextDouble()));
                 return;
             case BOOLEAN:
                 temp.put(name, new Result(jsonReader.nextBoolean()));

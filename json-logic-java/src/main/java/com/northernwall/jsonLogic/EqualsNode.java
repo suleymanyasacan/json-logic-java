@@ -35,39 +35,39 @@ class EqualsNode extends BinaryNode {
             if(rightResult.isBoolean()) {
                 return new Result(leftResult.getBooleanValue() == rightResult.getBooleanValue());
             }
-            else if(rightResult.isLong())
+            else if(rightResult.isDouble())
             {
-                if(rightResult.getLongValue()>1||rightResult.getLongValue()<0)
+                if(rightResult.getDoubleValue()>1||rightResult.getDoubleValue()<0)
                     throw new EvaluationException("fffffff");
                 else
-                    return new Result(leftResult.getBooleanValue() == (rightResult.getLongValue()>0));
+                    return new Result(leftResult.getBooleanValue() == (rightResult.getDoubleValue()>0));
             }
 
-        if (leftResult.isLong())
-            if(rightResult.isLong())
-                return new Result(leftResult.getLongValue() == rightResult.getLongValue());
+        if (leftResult.isDouble())
+            if(rightResult.isDouble())
+                return new Result(leftResult.getDoubleValue() == rightResult.getDoubleValue());
             else if(rightResult.isBoolean())
             {
-                if(leftResult.getLongValue()>1||leftResult.getLongValue()<0)
+                if(leftResult.getDoubleValue()>1||leftResult.getDoubleValue()<0)
                     throw new EvaluationException("fffffff");
                 else
-                    return new Result((leftResult.getLongValue()>0) == rightResult.getBooleanValue());
+                    return new Result((leftResult.getDoubleValue()>0) == rightResult.getBooleanValue());
 
             }
 
 
-        if(leftResult.isLong()&&rightResult.isString())
+        if(leftResult.isDouble()&&rightResult.isString())
         {
             Long temp=new Long(rightResult.getStringValue());
 
-            return new Result(leftResult.getLongValue() == temp);
+            return new Result(leftResult.getDoubleValue() == temp);
         }
 
-        if(rightResult.isLong()&&leftResult.isString())
+        if(rightResult.isDouble()&&leftResult.isString())
         {
             Long temp=new Long(leftResult.getStringValue());
 
-            return new Result(rightResult.getLongValue() == temp);
+            return new Result(rightResult.getDoubleValue() == temp);
         }
 
         return null;

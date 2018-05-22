@@ -24,7 +24,11 @@ public class Result {
     private final Object value;
     
     public Result(Object value) {
-        this.value = value;
+
+        if(value instanceof  Long)
+            this.value=((Long)value).doubleValue();
+        else
+            this.value = value;
     }
 
     public boolean isBoolean() {
@@ -35,12 +39,12 @@ public class Result {
         return ((Boolean)value).booleanValue();
     }
     
-    public boolean isLong() {
-        return (value instanceof Long);
+    public boolean isDouble() {
+        return (value instanceof Double);
     }
 
-    public long getLongValue() {
-        return ((Long)value).longValue();
+    public double getDoubleValue() {
+        return ((Double)value).doubleValue();
     }
     
     public boolean isString() {
@@ -48,6 +52,9 @@ public class Result {
     }
 
     public String getStringValue() {
+        if(isDouble())
+            return (long) getDoubleValue() == getDoubleValue() ? "" + (long) getDoubleValue() : "" + getDoubleValue();
+
         return value.toString();
     }
     

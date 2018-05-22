@@ -21,20 +21,29 @@ import java.util.Map;
  *
  * @author Richard
  */
-class GreaterThanEqualsNode extends BinaryNode {
+class MultiplicationNode extends MultiNode {
 
-    GreaterThanEqualsNode(Node left, Node right) {
-        super(left, right, " >= ");
+    MultiplicationNode(Node left, Node right) {
+        super(left, right, " * ");
     }
 
     @Override
     Result eval(Map<String, Result> data) throws EvaluationException {
-        Result leftResult = left.eval(data);
-        Result rightResult = right.eval(data);
-        if (leftResult.isDouble() && rightResult.isDouble()) {
-            return new Result(leftResult.getDoubleValue() >= rightResult.getDoubleValue());
+
+        Double res= Double.valueOf(1);
+        
+
+        for (Node node : nodes)
+        {
+            Result result = node.eval(data);
+            if (!result.isDouble())
+                throw new EvaluationException("");
+
+            res=res*result.getDoubleValue();
         }
-        return new Result(false );
+
+        return new Result(res);
     }
+
 
 }

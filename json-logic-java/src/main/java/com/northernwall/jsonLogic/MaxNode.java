@@ -21,20 +21,27 @@ import java.util.Map;
  *
  * @author Richard
  */
-class GreaterThanEqualsNode extends BinaryNode {
+class MaxNode extends MultiNode {
 
-    GreaterThanEqualsNode(Node left, Node right) {
-        super(left, right, " >= ");
+    MaxNode(Node left, Node right) {
+        super(left, right, " max ");
     }
 
     @Override
     Result eval(Map<String, Result> data) throws EvaluationException {
-        Result leftResult = left.eval(data);
-        Result rightResult = right.eval(data);
-        if (leftResult.isDouble() && rightResult.isDouble()) {
-            return new Result(leftResult.getDoubleValue() >= rightResult.getDoubleValue());
+        Double max= Double.MIN_VALUE;
+
+        for (Node node : nodes)
+        {
+            Result result = node.eval(data);
+            if (!result.isDouble())
+                throw new EvaluationException("");
+
+            if(result.getDoubleValue()>max)
+                max=result.getDoubleValue();
         }
-        return new Result(false );
+
+        return new Result(max);
     }
 
 }

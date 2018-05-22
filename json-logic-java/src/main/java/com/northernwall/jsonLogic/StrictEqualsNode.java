@@ -35,8 +35,8 @@ class StrictEqualsNode extends BinaryNode {
             return new Result(leftResult.getBooleanValue() == rightResult.getBooleanValue());
         }
 
-        if (leftResult.isLong()&&rightResult.isLong())
-            return new Result(leftResult.getLongValue() == rightResult.getLongValue());
+        if (leftResult.isDouble()&&rightResult.isDouble())
+            return new Result(leftResult.getDoubleValue() == rightResult.getDoubleValue());
 
         return new Result(false);
     }
