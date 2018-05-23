@@ -33,6 +33,10 @@ public class Result {
             this.value = value;
     }
 
+    public Object getCastedValue() {
+        return value;
+    }
+
     public boolean isBoolean() {
         return (value instanceof Boolean);
     }
@@ -78,6 +82,14 @@ public class Result {
             return (long) getDoubleValue() == getDoubleValue() ? "" + (long) getDoubleValue() : "" + getDoubleValue();
 
         return value.toString();
+    }
+
+    public boolean isArray() {
+        return (value instanceof JsonArray);
+    }
+
+    public JsonArray getArrayValue() {
+        return (JsonArray)value;
     }
     
 }

@@ -134,6 +134,9 @@ public class JsonLogic {
                         case "missing":
                             tree = parseMissing(jsonReader);
                             break;
+                        case "merge":
+                            tree = parseMerge(jsonReader);
+                            break;
                         case "log":
                             tree = parseLog(jsonReader);
                             break;
@@ -155,6 +158,11 @@ public class JsonLogic {
                         tree = FALSE_NODE;
                     }
                     break;
+                case BEGIN_ARRAY:
+                    jsonReader.beginArray();
+                    tree = new ConstantNode(parse(jsonReader));
+                    jsonReader.endArray();
+
             }
         } catch (IOException ex) {
             throw new ParseException(ex.getMessage(), ex);
@@ -639,6 +647,29 @@ public class JsonLogic {
                         }
                         jsonReader.endArray();
                         return missingNode;
+                }
+            }
+        } catch (IOException ex) {
+            throw new ParseException(ex.getMessage(), ex);
+        }
+        return null;
+    }
+
+    private Node parseMerge(JsonReader jsonReader) throws ParseException {
+
+        try {
+            JsonToken token = jsonReader.peek();
+            if (null != token) {
+                switch (token) {
+                    case BEGIN_ARRAY:
+                        MergeNode mergeNode=null;
+                        jsonReader.beginArray();
+                        mergeNode = new MergeNode(parse(jsonReader), parse(jsonReader));
+                        while (jsonReader.peek() != JsonToken.END_ARRAY) {
+                            mergeNode.add(parse(jsonReader));
+                        }
+                        jsonReader.endArray();
+                        return mergeNode;
                 }
             }
         } catch (IOException ex) {
