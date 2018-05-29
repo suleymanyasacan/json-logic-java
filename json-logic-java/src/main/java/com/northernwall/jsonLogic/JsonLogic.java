@@ -159,10 +159,10 @@ public class JsonLogic {
                         tree = FALSE_NODE;
                     }
                     break;
-//                case BEGIN_ARRAY:
-//                    jsonReader.beginArray();
-//                    tree = parseArrayNode(jsonReader);
-//                    jsonReader.endArray();
+                case BEGIN_ARRAY:
+                    jsonReader.beginArray();
+                    tree = parseArrayNode(jsonReader);
+                    jsonReader.endArray();
 
             }
         } catch (IOException ex) {
@@ -725,37 +725,20 @@ public class JsonLogic {
             e.printStackTrace();
         }
 
-
-
     }
 
-//    private Node parseArrayNode(JsonReader jsonReader) throws ParseException {
-//
-//        ArrayNode mergeNode=null;
-//        try {
-//            JsonToken token = jsonReader.peek();
-//
-//            if (null != token) {
-//                switch (token) {
-//                    case BEGIN_ARRAY:
-//                        jsonReader.beginArray();
-//                        mergeNode = new ArrayNode(parse(jsonReader), parse(jsonReader));
-//                        while (jsonReader.peek() != JsonToken.END_ARRAY) {
-//                            mergeNode.add(parse(jsonReader));
-//                        }
-//                        jsonReader.endArray();
-//
-//
-//                    default:
-//                        mergeNode = new ArrayNode(parse(jsonReader), parse(jsonReader));
-//                        mergeNode.add(parse(jsonReader));
-//                }
-//            }
-//        } catch (IOException ex) {
-//            throw new ParseException(ex.getMessage(), ex);
-//        }
-//        return mergeNode;
-//    }
+    private Node parseArrayNode(JsonReader jsonReader) throws ParseException {
+
+        ArrayNode arrayNode=new ArrayNode();
+        try {
+            while (jsonReader.peek() != JsonToken.END_ARRAY) {
+                arrayNode.add(parse(jsonReader));
+            }
+            return arrayNode;
+        } catch (IOException ex) {
+            throw new ParseException(ex.getMessage(), ex);
+        }
+    }
 
     private Node parseLog(JsonReader jsonReader) throws ParseException {
         try {

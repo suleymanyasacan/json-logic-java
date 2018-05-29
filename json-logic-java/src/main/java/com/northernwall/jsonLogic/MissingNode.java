@@ -45,11 +45,23 @@ class MissingNode extends MultiNode {
         for (Node node : nodes)
         {
             Result result = node.eval(data);
-            if (!result.isString())
-                throw new EvaluationException("");
+            if (result.isString())
+            {
+                if(!data.containsKey(result.getStringValue()))
+                    missingOnes.add(result.getStringValue());
+            }
+            else if(result.isArray())
+            {
+                for(int i=0;i<result.getArrayValue().size();i++)
+                    if(!data.containsKey(result.getArrayValue().get(i)))
+                        missingOnes.add(result.getArrayValue().get(i));
+            }
+            else
+                throw new EvaluationException("ffff");
 
-            if(!data.containsKey(result.getStringValue()))
-                missingOnes.add(result.getStringValue());
+
+
+
         }
 
         return new Result(missingOnes);
