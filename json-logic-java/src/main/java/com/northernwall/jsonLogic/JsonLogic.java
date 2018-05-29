@@ -16,6 +16,7 @@
 package com.northernwall.jsonLogic;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import java.io.IOException;
@@ -158,10 +159,10 @@ public class JsonLogic {
                         tree = FALSE_NODE;
                     }
                     break;
-                case BEGIN_ARRAY:
-                    jsonReader.beginArray();
-                    tree = new ConstantNode(parse(jsonReader));
-                    jsonReader.endArray();
+//                case BEGIN_ARRAY:
+//                    jsonReader.beginArray();
+//                    tree = parseArrayNode(jsonReader);
+//                    jsonReader.endArray();
 
             }
         } catch (IOException ex) {
@@ -399,6 +400,7 @@ public class JsonLogic {
             if (token == JsonToken.BEGIN_ARRAY) {
                 jsonReader.beginArray();
                 ifNode = new IfNode(parse(jsonReader), parse(jsonReader), parse(jsonReader));
+                JsonToken a=jsonReader.peek();
                 while (jsonReader.peek() != JsonToken.END_ARRAY) {
                     ifNode.addConditionNode(parse(jsonReader), parse(jsonReader));
                 }
@@ -647,6 +649,12 @@ public class JsonLogic {
                         }
                         jsonReader.endArray();
                         return missingNode;
+                    case BEGIN_OBJECT:
+                        missingNode =
+                                new MissingNode();
+
+                        missingNode.add(parse(jsonReader));
+                        return missingNode;
                 }
             }
         } catch (IOException ex) {
@@ -657,26 +665,97 @@ public class JsonLogic {
 
     private Node parseMerge(JsonReader jsonReader) throws ParseException {
 
+        MergeNode mergeNode=new MergeNode();
+
         try {
-            JsonToken token = jsonReader.peek();
-            if (null != token) {
-                switch (token) {
-                    case BEGIN_ARRAY:
-                        MergeNode mergeNode=null;
-                        jsonReader.beginArray();
-                        mergeNode = new MergeNode(parse(jsonReader), parse(jsonReader));
-                        while (jsonReader.peek() != JsonToken.END_ARRAY) {
+            jsonReader.beginArray();
+
+            while (jsonReader.hasNext())
+            {
+                JsonToken token = jsonReader.peek();
+                if (null != token)
+                {
+                    switch (token) {
+                        case NUMBER:
+                            mergeNode.add(new ConstantNode(new Result(jsonReader.nextDouble())));
+                            break;
+                        case STRING:
+                            mergeNode.add(new ConstantNode(new Result(jsonReader.nextString())));
+                            break;
+                        case BEGIN_ARRAY:
+                            unwind(mergeNode, jsonReader);
+                            break;
+                        case BEGIN_OBJECT:
                             mergeNode.add(parse(jsonReader));
-                        }
-                        jsonReader.endArray();
-                        return mergeNode;
+                            break;
+                    }
                 }
             }
+
+            jsonReader.endArray();
         } catch (IOException ex) {
             throw new ParseException(ex.getMessage(), ex);
         }
-        return null;
+
+        return mergeNode;
     }
+
+    private void unwind(MergeNode mergeNode, JsonReader reader) {
+
+        try {
+
+            reader.beginArray();
+
+            while(reader.hasNext()) {
+
+                JsonToken peeked = reader.peek();
+
+                if (reader.peek() == JsonToken.NUMBER)
+                    mergeNode.add(new ConstantNode(new Result(reader.nextDouble())));
+                else if (reader.peek() == JsonToken.STRING)
+                    mergeNode.add(new ConstantNode(new Result(reader.nextString())));
+                else if (reader.peek() == JsonToken.BOOLEAN)
+                    mergeNode.add(new ConstantNode(new Result(reader.nextBoolean())));
+                else if (reader.peek() == JsonToken.BEGIN_ARRAY)
+                    unwind(mergeNode, reader);
+            }
+
+            reader.endArray();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+
+    }
+
+//    private Node parseArrayNode(JsonReader jsonReader) throws ParseException {
+//
+//        ArrayNode mergeNode=null;
+//        try {
+//            JsonToken token = jsonReader.peek();
+//
+//            if (null != token) {
+//                switch (token) {
+//                    case BEGIN_ARRAY:
+//                        jsonReader.beginArray();
+//                        mergeNode = new ArrayNode(parse(jsonReader), parse(jsonReader));
+//                        while (jsonReader.peek() != JsonToken.END_ARRAY) {
+//                            mergeNode.add(parse(jsonReader));
+//                        }
+//                        jsonReader.endArray();
+//
+//
+//                    default:
+//                        mergeNode = new ArrayNode(parse(jsonReader), parse(jsonReader));
+//                        mergeNode.add(parse(jsonReader));
+//                }
+//            }
+//        } catch (IOException ex) {
+//            throw new ParseException(ex.getMessage(), ex);
+//        }
+//        return mergeNode;
+//    }
 
     private Node parseLog(JsonReader jsonReader) throws ParseException {
         try {

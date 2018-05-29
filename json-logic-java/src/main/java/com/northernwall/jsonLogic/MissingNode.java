@@ -31,6 +31,12 @@ class MissingNode extends MultiNode {
         super(left, right, " missing ");
     }
 
+    MissingNode() {
+        super(null, null, " merge ");
+
+        nodes=new ArrayList<>();
+    }
+
     @Override
     Result eval(Map<String, Result> data) throws EvaluationException {
 

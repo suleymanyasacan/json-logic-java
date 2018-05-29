@@ -17,6 +17,7 @@ package com.northernwall.jsonLogic;
 
 import com.google.gson.JsonArray;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -27,6 +28,12 @@ class MergeNode extends MultiNode {
 
     MergeNode(Node left, Node right) {
         super(left, right, " merge ");
+    }
+
+    MergeNode() {
+        super(null, null, " merge ");
+
+        nodes=new ArrayList<>();
     }
 
     @Override
