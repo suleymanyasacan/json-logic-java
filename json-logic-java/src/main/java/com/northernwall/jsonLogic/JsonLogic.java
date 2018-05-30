@@ -138,6 +138,12 @@ public class JsonLogic {
                         case "merge":
                             tree = parseMerge(jsonReader);
                             break;
+                        case "cat":
+                            tree = parseCat(jsonReader);
+                            break;
+                        case "in":
+                            tree = parseIn(jsonReader);
+                            break;
                         case "log":
                             tree = parseLog(jsonReader);
                             break;
@@ -739,6 +745,47 @@ public class JsonLogic {
             throw new ParseException(ex.getMessage(), ex);
         }
     }
+
+
+    private Node parseCat(JsonReader jsonReader) throws ParseException {
+
+        try {
+            JsonToken token = jsonReader.peek();
+            if (null != token) {
+                switch (token) {
+                    case BEGIN_ARRAY:
+                        CatNode node=null;
+                        jsonReader.beginArray();
+                        node = new CatNode();
+                        while (jsonReader.peek() != JsonToken.END_ARRAY) {
+                            node.add(parse(jsonReader));
+                        }
+                        jsonReader.endArray();
+                        return node;
+                }
+            }
+        } catch (IOException ex) {
+            throw new ParseException(ex.getMessage(), ex);
+        }
+        return null;
+    }
+
+    private Node parseIn(JsonReader jsonReader) throws ParseException {
+        Node tree = null;
+        try {
+
+            JsonToken token = jsonReader.peek();
+            if (token == JsonToken.BEGIN_ARRAY) {
+                jsonReader.beginArray();
+                tree = new InNode(parse(jsonReader), parse(jsonReader));
+                jsonReader.endArray();
+            }
+        } catch (IOException ex) {
+            throw new ParseException(ex.getMessage(), ex);
+        }
+        return tree;
+    }
+
 
     private Node parseLog(JsonReader jsonReader) throws ParseException {
         try {
