@@ -135,6 +135,9 @@ public class JsonLogic {
                         case "missing":
                             tree = parseMissing(jsonReader);
                             break;
+                        case "missing_some":
+                            tree = parseMissingSome(jsonReader);
+                            break;
                         case "merge":
                             tree = parseMerge(jsonReader);
                             break;
@@ -143,6 +146,9 @@ public class JsonLogic {
                             break;
                         case "in":
                             tree = parseIn(jsonReader);
+                            break;
+                        case "substr":
+                            tree = parseSubstr(jsonReader);
                             break;
                         case "log":
                             tree = parseLog(jsonReader);
@@ -669,6 +675,22 @@ public class JsonLogic {
         return null;
     }
 
+    private Node parseMissingSome(JsonReader jsonReader) throws ParseException {
+        Node tree = null;
+        try {
+
+            JsonToken token = jsonReader.peek();
+            if (token == JsonToken.BEGIN_ARRAY) {
+                jsonReader.beginArray();
+                tree = new MissingSomeNode(parse(jsonReader), parse(jsonReader));
+                jsonReader.endArray();
+            }
+        } catch (IOException ex) {
+            throw new ParseException(ex.getMessage(), ex);
+        }
+        return tree;
+    }
+
     private Node parseMerge(JsonReader jsonReader) throws ParseException {
 
         MergeNode mergeNode=new MergeNode();
@@ -784,6 +806,28 @@ public class JsonLogic {
             throw new ParseException(ex.getMessage(), ex);
         }
         return tree;
+    }
+
+    private Node parseSubstr(JsonReader jsonReader) throws ParseException {
+        SubstrNode node=new SubstrNode();
+        try {
+
+            JsonToken token = jsonReader.peek();
+            if (null != token) {
+                switch (token) {
+                    case BEGIN_ARRAY:
+                        jsonReader.beginArray();
+                        while (jsonReader.peek() != JsonToken.END_ARRAY) {
+                            node.add(parse(jsonReader));
+                        }
+                        jsonReader.endArray();
+                        return node;
+                }
+            }
+        } catch (IOException ex) {
+            throw new ParseException(ex.getMessage(), ex);
+        }
+        return node;
     }
 
 

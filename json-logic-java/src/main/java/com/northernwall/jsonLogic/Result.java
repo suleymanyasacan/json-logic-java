@@ -69,7 +69,7 @@ public class Result {
         return (value instanceof Double);
     }
 
-    public double getDoubleValue() {
+    public Double getDoubleValue() {
         return ((Double)value).doubleValue();
     }
     
@@ -79,7 +79,7 @@ public class Result {
 
     public String getStringValue() {
         if(isDouble())
-            return (long) getDoubleValue() == getDoubleValue() ? "" + (long) getDoubleValue() : "" + getDoubleValue();
+            return getDoubleValue().longValue() == getDoubleValue() ? "" + getDoubleValue().longValue() : "" + getDoubleValue();
 
         return value.toString();
     }

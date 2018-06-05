@@ -15,35 +15,50 @@
  */
 package com.northernwall.jsonLogic;
 
+import com.google.gson.JsonArray;
+
 import java.util.Map;
 
 /**
  *
  * @author Richard
  */
-class StrictEqualsNode extends BinaryNode {
+class MissingSomeNode extends BinaryNode {
 
-    StrictEqualsNode(Node left, Node right) {
-        super(left, right, " === ");
+    MissingSomeNode(Node left, Node right) {
+        super(left, right, " missing_some ");
     }
 
     @Override
     Result eval(Map<String, Result> data) throws EvaluationException {
         Result leftResult = left.eval(data);
         Result rightResult = right.eval(data);
-        if (leftResult.isBoolean()&&rightResult.isBoolean()) {
-            return new Result(leftResult.getBooleanValue() == rightResult.getBooleanValue());
+
+        if (!leftResult.isDouble()||!rightResult.isArray())
+            throw new EvaluationException("");
+
+        JsonArray missingOnes=new JsonArray();
+        int found=0;
+
+        for (int i=0;i<rightResult.getArrayValue().size();i++)
+        {
+            String s =  rightResult.getArrayValue().get(i).getAsString();
+
+            if(!data.containsKey(s))
+                missingOnes.add(s);
+            else
+                found++;
+
+            if(found==leftResult.getDoubleValue().intValue())
+                return new Result(new JsonArray());
         }
 
-        if (leftResult.isDouble()&&rightResult.isDouble())
-            return new Result(leftResult.getDoubleValue().equals(rightResult.getDoubleValue()));
-
-        return new Result(false);
+        return new Result(missingOnes);
     }
 
     @Override
     boolean isConstant() {
-        return left.isConstant() && right.isConstant();
+        return false;
     }
-    
+
 }

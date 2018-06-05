@@ -40,16 +40,16 @@ class NotEqualsNode extends BinaryNode {
 
         if(leftResult.isDouble()&&rightResult.isString())
         {
-            Long temp=new Long(rightResult.getStringValue());
+            Double temp=new Double(rightResult.getStringValue());
 
-            return new Result(leftResult.getDoubleValue() != temp);
+            return new Result(!leftResult.getDoubleValue().equals(temp));
         }
 
         if(rightResult.isDouble()&&leftResult.isString())
         {
-            Long temp=new Long(leftResult.getStringValue());
+            Double temp=new Double(leftResult.getStringValue());
 
-            return new Result(rightResult.getDoubleValue() != temp);
+            return new Result(!rightResult.getDoubleValue().equals(temp));
         }
 
 
