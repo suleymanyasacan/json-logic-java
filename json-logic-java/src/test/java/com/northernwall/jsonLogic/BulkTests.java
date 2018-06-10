@@ -50,6 +50,9 @@ public class BulkTests {
                 if (!line.isEmpty()) {
                     if (line.startsWith("#")) {
                         System.out.println(line);
+                    } else if (line.startsWith("$$")) {
+                        line=line.replace("$$","");
+                        runTest(jsonLogic);
                     } else {
                         runTest(jsonLogic);
                     }
@@ -96,6 +99,8 @@ public class BulkTests {
             expectedResult = parts[2];
         }
 
+        System.out.println(rule);
+
         try {
             Result result = jsonLogic.apply(rule, data);
             if (!checkResult(expectedResult, result)) {
@@ -114,6 +119,8 @@ public class BulkTests {
                 return;
             }
         } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(data);
             printError(e.getClass().getSimpleName()
                     + ": "
                     + e.getMessage());

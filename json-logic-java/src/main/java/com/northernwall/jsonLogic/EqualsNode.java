@@ -24,13 +24,17 @@ import java.util.Map;
 class EqualsNode extends BinaryNode {
 
     EqualsNode(Node left, Node right) {
-        super(left, right, " == ");
+        super(left, right, "==");
     }
 
     @Override
     Result eval(Map<String, Result> data) throws EvaluationException {
         Result leftResult = left.eval(data);
         Result rightResult = right.eval(data);
+
+        if(leftResult.isString()&&rightResult.isString())
+            return new Result(leftResult.getStringValue().equals(rightResult.getStringValue()));
+
         if (leftResult.isBoolean())
             if(rightResult.isBoolean()) {
                 return new Result(leftResult.getBooleanValue() == rightResult.getBooleanValue());
@@ -69,6 +73,8 @@ class EqualsNode extends BinaryNode {
 
             return new Result(rightResult.getDoubleValue().equals(temp));
         }
+
+
 
         return null;
     }

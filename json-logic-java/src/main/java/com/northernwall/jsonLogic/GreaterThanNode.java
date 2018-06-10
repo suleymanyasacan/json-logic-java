@@ -24,7 +24,7 @@ import java.util.Map;
 class GreaterThanNode extends BinaryNode {
 
     GreaterThanNode(Node left, Node right) {
-        super(left, right, " > ");
+        super(left, right, ">");
     }
 
     @Override

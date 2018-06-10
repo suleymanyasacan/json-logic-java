@@ -147,6 +147,15 @@ public class JsonLogic {
                         case "in":
                             tree = parseIn(jsonReader);
                             break;
+                        case "all":
+                            tree = parseAll(jsonReader);
+                            break;
+                        case "some":
+                            tree = parseSome(jsonReader);
+                            break;
+                        case "none":
+                            tree = parseNone(jsonReader);
+                            break;
                         case "substr":
                             tree = parseSubstr(jsonReader);
                             break;
@@ -800,6 +809,57 @@ public class JsonLogic {
             if (token == JsonToken.BEGIN_ARRAY) {
                 jsonReader.beginArray();
                 tree = new InNode(parse(jsonReader), parse(jsonReader));
+                jsonReader.endArray();
+            }
+        } catch (IOException ex) {
+            throw new ParseException(ex.getMessage(), ex);
+        }
+        return tree;
+    }
+
+    private Node parseAll(JsonReader jsonReader) throws ParseException {
+        Node tree = null;
+        try {
+
+            JsonToken token = jsonReader.peek();
+            if (token == JsonToken.BEGIN_ARRAY) {
+                jsonReader.beginArray();
+                tree = new AllNode(parse(jsonReader), parse(jsonReader));
+
+                jsonReader.endArray();
+            }
+        } catch (IOException ex) {
+            throw new ParseException(ex.getMessage(), ex);
+        }
+        return tree;
+    }
+
+    private Node parseSome(JsonReader jsonReader) throws ParseException {
+        Node tree = null;
+        try {
+
+            JsonToken token = jsonReader.peek();
+            if (token == JsonToken.BEGIN_ARRAY) {
+                jsonReader.beginArray();
+                tree = new SomeNode(parse(jsonReader), parse(jsonReader));
+
+                jsonReader.endArray();
+            }
+        } catch (IOException ex) {
+            throw new ParseException(ex.getMessage(), ex);
+        }
+        return tree;
+    }
+
+    private Node parseNone(JsonReader jsonReader) throws ParseException {
+        Node tree = null;
+        try {
+
+            JsonToken token = jsonReader.peek();
+            if (token == JsonToken.BEGIN_ARRAY) {
+                jsonReader.beginArray();
+                tree = new NoneNode(parse(jsonReader), parse(jsonReader));
+
                 jsonReader.endArray();
             }
         } catch (IOException ex) {

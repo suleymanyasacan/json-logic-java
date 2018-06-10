@@ -126,9 +126,14 @@
 {"missing":["a", "b", "c", "d"]}	{"a":"apple", "c":"carrot"}	["b","d"]
 {"if":[{"missing":["a", "b"]},"Not enough fruit","OK to proceed"]}	{"a":"apple", "b":"banana", "c":"carrot"}	OK to proceed
 
+#MissingSome operator
+{"missing_some":[1, ["a", "b", "c"]]}	{"a":"apple"}	[]
+{"missing_some":[2, ["a", "b", "c"]]}	{"a":"apple"}	["b","c"]
+
+
 #Array Operations
-{"merge":[ [1,2], [3,4] ]}	[1,2,3,4]
-{"merge":[ 1, 2, [3,4] ]}	[1,2,3,4]
+{"merge":[ [1,2], [3,4] ]}	[1.0,2.0,3.0,4.0]
+{"merge":[ 1, 2, [3,4] ]}	[1.0,2.0,3.0,4.0]
 {"missing" :{ "merge" : ["vin",{"if": [{"var":"financing"}, ["apr", "term"], [] ]}]}}	{"financing":true}	["vin","apr","term"]
 {"missing" :{ "merge" : ["vin",{"if": [{"var":"financing"}, ["apr", "term"], [] ]}]}}	{"financing":false}	["vin"]
 
@@ -136,9 +141,25 @@
 {"in":[ "Ringo", ["John", "Paul", "George", "Ringo"] ]}	true
 {"in":["Spring", "Springfield"]}	true
 
+#All operator
+{"all" : [ [1,2,3], {">":[{"var":""}, 0]} ]}	true
+$${"all" : [ {"var":"pies"}, {"==":[{"var":"filling"}, "apple"]} ]}	{"pies":[{"filling":"pumpkin","temp":110},{"filling":"rhubarb","temp":210},{"filling":"apple","temp":310}]}	false
+
+#Some operator
+{"some" : [ {"var":"pies"}, {"==":[{"var":"filling"}, "apple"]} ]}	{"pies":[{"filling":"pumpkin","temp":110},{"filling":"rhubarb","temp":210},{"filling":"apple","temp":310}]}	true
+{"some" : [ [-1,0,1], {">":[{"var":""}, 0]} ]}	true
+
+#None operator
+{"none" : [ [-3,-2,-1], {">":[{"var":""}, 0]} ]}	true
+
 #Cat operator
 {"cat": ["I love", " pie"]}	I love pie
 {"cat": ["I love ", {"var":"filling"}, " pie"]}	{"filling":"apple", "temp":110}	I love apple pie
+
+#Substr operator
+{"substr": ["jsonlogic", 4]}	logic
+{"substr": ["jsonlogic", -5]}	logic
+{"substr": ["jsonlogic", 1,3]}	son
 
 #log to console
 {"log":"apple"}	apple

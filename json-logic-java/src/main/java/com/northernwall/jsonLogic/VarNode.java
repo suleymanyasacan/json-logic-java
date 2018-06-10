@@ -15,7 +15,10 @@
  */
 package com.northernwall.jsonLogic;
 
+import com.sun.org.apache.regexp.internal.RE;
+
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  *
@@ -37,6 +40,9 @@ class VarNode extends Node {
 
     @Override
     Result eval(Map<String, Result> data) {
+
+        //Map<String,Result> tt=((TreeMap)data).subMap( name+".$", name+".$" + Character.MAX_VALUE );
+
         if (data == null || data.isEmpty() || !data.containsKey(name)) {
             return defaultResult;
         }
@@ -50,9 +56,9 @@ class VarNode extends Node {
 
     @Override
     void treeToString(StringBuilder builder) {
-        builder.append("var->\"");
-        builder.append(name);
-        builder.append("\"");
+        builder.append("{\"var\":");
+        builder.append("\""+name+"\"");
+        builder.append("}");
     }
     
 }

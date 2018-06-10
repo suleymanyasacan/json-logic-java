@@ -51,11 +51,18 @@ abstract class BinaryNode extends Node {
 
     @Override
     void treeToString(StringBuilder builder) {
-        builder.append("(");
+//        builder.append("(");
+//        left.treeToString(builder);
+//        builder.append(operator);
+//        right.treeToString(builder);
+//        builder.append(")");
+
+        builder.append("{\""+operator+"\":[");
         left.treeToString(builder);
-        builder.append(operator);
+        builder.append(",");
         right.treeToString(builder);
-        builder.append(")");
+        builder.append("]}");
+
     }
 
 }

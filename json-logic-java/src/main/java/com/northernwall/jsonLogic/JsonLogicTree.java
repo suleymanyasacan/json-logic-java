@@ -16,12 +16,13 @@
 package com.northernwall.jsonLogic;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * JsonLogicTree is a reusable representation of a 'JsonLogic' expression.
@@ -51,6 +52,7 @@ public class JsonLogicTree {
 
     private Map<String, Result> convertData(String data) throws ParseException {
         Map<String, Result> temp = new HashMap<>();
+        /////////////////Map<String, Result> temp = new TreeMap<>();
         if (data == null || data.isEmpty()) {
             return temp;
         }
@@ -92,6 +94,59 @@ public class JsonLogicTree {
                     token = jsonReader.peek();
                 }
                 jsonReader.endObject();
+                return;
+            case BEGIN_ARRAY:
+//                jsonReader.beginArray();
+//                token = jsonReader.peek();
+//                int counter=0;
+//                while (token != JsonToken.END_ARRAY) {
+//                    readValue(name+".$"+counter,jsonReader,temp);
+//                    counter++;
+//                    token = jsonReader.peek();
+//                }
+//                System.out.println(temp);
+//                jsonReader.endArray();
+//                return;
+                jsonReader.beginArray();
+                JsonArray doomed=new JsonArray();
+                LinkedHashMap<String,Result> lolo=new LinkedHashMap();
+                int counter=0;
+                token = jsonReader.peek();
+
+                while (token != JsonToken.END_ARRAY) {
+                    readValue(name+".$"+counter,jsonReader,lolo);
+                    counter++;
+                    token = jsonReader.peek();
+                }
+
+                for(int i=0;i<counter;i++)
+                {
+                    JsonObject jj=new JsonObject();
+                    for(Map.Entry<String,Result> entry:lolo.entrySet())
+                    {
+                        if(entry.getKey().startsWith(name+".$"+i))
+                        {
+                            System.out.println(entry.getKey());
+                            String fieldName=entry.getKey().replaceAll("^"+name+"\\.\\$"+i+"\\.","");
+
+                            if(entry.getValue().isString())
+                                jj.addProperty(fieldName,entry.getValue().getStringValue());
+                            else if(entry.getValue().isDouble())
+                                jj.addProperty(fieldName,entry.getValue().getDoubleValue());
+                            else if(entry.getValue().isBoolean())
+                                jj.addProperty(fieldName,entry.getValue().getBooleanValue());
+                        }
+                    }
+
+                    System.out.println(jj);
+                    doomed.add(jj);
+
+                }
+
+                System.out.println(temp);
+                jsonReader.endArray();
+                temp.put(name,new Result(doomed));
+                return;
         }
     }
 
