@@ -25,7 +25,7 @@ import java.util.List;
 public abstract class MultiNode extends Node {
 
     protected List<Node> nodes;
-    private final String operator;
+    protected final String operator;
 
     MultiNode(Node left, Node right, String operator) {
         nodes = new ArrayList<>();
@@ -58,17 +58,32 @@ public abstract class MultiNode extends Node {
         }
     }
 
+//    @Override
+//    void treeToString(StringBuilder builder) {
+//        builder.append("(");
+//        for (int i=0;i<nodes.size();i++) {
+//            Node node = nodes.get(i);
+//            node.treeToString(builder);
+//            if (i < nodes.size()-1) {
+//                builder.append(operator);
+//            }
+//        }
+//        builder.append(")");
+//    }
+
+
     @Override
     void treeToString(StringBuilder builder) {
-        builder.append("(");
-        for (int i=0;i<nodes.size();i++) {
-            Node node = nodes.get(i);
+        builder.append("{\""+operator+"\":[");
+
+        for (Node node : nodes){
             node.treeToString(builder);
-            if (i < nodes.size()-1) {
-                builder.append(operator);
-            }
+            builder.append(",");
         }
-        builder.append(")");
+
+        builder.deleteCharAt(builder.length() - 1);
+
+        builder.append("]}");
     }
 
 }

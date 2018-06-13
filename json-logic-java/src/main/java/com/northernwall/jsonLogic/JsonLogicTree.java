@@ -108,7 +108,7 @@ public class JsonLogicTree {
 //                jsonReader.endArray();
 //                return;
                 jsonReader.beginArray();
-                JsonArray doomed=new JsonArray();
+
                 LinkedHashMap<String,Result> lolo=new LinkedHashMap();
                 int counter=0;
                 token = jsonReader.peek();
@@ -119,34 +119,68 @@ public class JsonLogicTree {
                     token = jsonReader.peek();
                 }
 
-                for(int i=0;i<counter;i++)
-                {
-                    JsonObject jj=new JsonObject();
-                    for(Map.Entry<String,Result> entry:lolo.entrySet())
-                    {
-                        if(entry.getKey().startsWith(name+".$"+i))
-                        {
-                            System.out.println(entry.getKey());
-                            String fieldName=entry.getKey().replaceAll("^"+name+"\\.\\$"+i+"\\.","");
+                boolean isJSONObject=true;
 
-                            if(entry.getValue().isString())
-                                jj.addProperty(fieldName,entry.getValue().getStringValue());
-                            else if(entry.getValue().isDouble())
-                                jj.addProperty(fieldName,entry.getValue().getDoubleValue());
-                            else if(entry.getValue().isBoolean())
-                                jj.addProperty(fieldName,entry.getValue().getBooleanValue());
-                        }
+                for(Map.Entry<String,Result> entry:lolo.entrySet())
+                    if (entry.getKey().equals(name + ".$0")) {
+                        isJSONObject=false;
+                        break;
                     }
 
-                    System.out.println(jj);
-                    doomed.add(jj);
+                if(isJSONObject){
+                    JsonArray doomed=new JsonArray();
 
+                    for(int i=0;i<counter;i++)
+                    {
+                        JsonObject jj=new JsonObject();
+                        for(Map.Entry<String,Result> entry:lolo.entrySet())
+                        {
+                            if(entry.getKey().startsWith(name+".$"+i))
+                            {
+                                System.out.println(entry.getKey());
+                                String fieldName=entry.getKey().replaceAll("^"+name+"\\.\\$"+i+"\\.","");
+
+                                if(entry.getValue().isString())
+                                    jj.addProperty(fieldName,entry.getValue().getStringValue());
+                                else if(entry.getValue().isDouble())
+                                    jj.addProperty(fieldName,entry.getValue().getDoubleValue());
+                                else if(entry.getValue().isBoolean())
+                                    jj.addProperty(fieldName,entry.getValue().getBooleanValue());
+                            }
+                        }
+
+                        System.out.println(jj);
+                        doomed.add(jj);
+                    }
+
+                    jsonReader.endArray();
+                    temp.put(name,new Result(doomed));
+                    return;
+
+                }else {
+                    JsonArray doomed=new JsonArray();
+
+                    for(Map.Entry<String,Result> entry:lolo.entrySet())
+                    {
+//                        if(entry.getKey().equals(name+".$"+arrayCounter))
+//                        {
+                            System.out.println(entry.getKey());
+
+                            if(entry.getValue().isString())
+                                doomed.add(entry.getValue().getStringValue());
+                            else if(entry.getValue().isDouble())
+                                doomed.add(entry.getValue().getDoubleValue());
+                            else if(entry.getValue().isBoolean())
+                                doomed.add(entry.getValue().getBooleanValue());
+//                        }
+                    }
+
+                    jsonReader.endArray();
+                    temp.put(name,new Result(doomed));
+                    return;
                 }
 
-                System.out.println(temp);
-                jsonReader.endArray();
-                temp.put(name,new Result(doomed));
-                return;
+
         }
     }
 

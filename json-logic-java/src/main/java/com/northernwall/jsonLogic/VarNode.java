@@ -41,8 +41,6 @@ class VarNode extends Node {
     @Override
     Result eval(Map<String, Result> data) {
 
-        //Map<String,Result> tt=((TreeMap)data).subMap( name+".$", name+".$" + Character.MAX_VALUE );
-
         if (data == null || data.isEmpty() || !data.containsKey(name)) {
             return defaultResult;
         }

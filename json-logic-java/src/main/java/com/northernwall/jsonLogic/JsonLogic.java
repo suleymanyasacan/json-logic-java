@@ -153,6 +153,10 @@ public class JsonLogic {
                         case "some":
                             tree = parseSome(jsonReader);
                             break;
+                        case "map":
+                            tree = parseMap(jsonReader);
+                            break;
+
                         case "none":
                             tree = parseNone(jsonReader);
                             break;
@@ -842,6 +846,23 @@ public class JsonLogic {
             if (token == JsonToken.BEGIN_ARRAY) {
                 jsonReader.beginArray();
                 tree = new SomeNode(parse(jsonReader), parse(jsonReader));
+
+                jsonReader.endArray();
+            }
+        } catch (IOException ex) {
+            throw new ParseException(ex.getMessage(), ex);
+        }
+        return tree;
+    }
+
+    private Node parseMap(JsonReader jsonReader) throws ParseException {
+        Node tree = null;
+        try {
+
+            JsonToken token = jsonReader.peek();
+            if (token == JsonToken.BEGIN_ARRAY) {
+                jsonReader.beginArray();
+                tree = new MapNode(parse(jsonReader), parse(jsonReader));
 
                 jsonReader.endArray();
             }

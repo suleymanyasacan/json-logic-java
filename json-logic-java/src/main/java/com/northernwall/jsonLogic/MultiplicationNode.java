@@ -24,7 +24,7 @@ import java.util.Map;
 class MultiplicationNode extends MultiNode {
 
     MultiplicationNode(Node left, Node right) {
-        super(left, right, " * ");
+        super(left, right, "*");
     }
 
     @Override
