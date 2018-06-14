@@ -96,17 +96,6 @@ public class JsonLogicTree {
                 jsonReader.endObject();
                 return;
             case BEGIN_ARRAY:
-//                jsonReader.beginArray();
-//                token = jsonReader.peek();
-//                int counter=0;
-//                while (token != JsonToken.END_ARRAY) {
-//                    readValue(name+".$"+counter,jsonReader,temp);
-//                    counter++;
-//                    token = jsonReader.peek();
-//                }
-//                System.out.println(temp);
-//                jsonReader.endArray();
-//                return;
                 jsonReader.beginArray();
 
                 LinkedHashMap<String,Result> lolo=new LinkedHashMap();
@@ -137,7 +126,6 @@ public class JsonLogicTree {
                         {
                             if(entry.getKey().startsWith(name+".$"+i))
                             {
-                                System.out.println(entry.getKey());
                                 String fieldName=entry.getKey().replaceAll("^"+name+"\\.\\$"+i+"\\.","");
 
                                 if(entry.getValue().isString())
@@ -149,7 +137,6 @@ public class JsonLogicTree {
                             }
                         }
 
-                        System.out.println(jj);
                         doomed.add(jj);
                     }
 
@@ -162,17 +149,12 @@ public class JsonLogicTree {
 
                     for(Map.Entry<String,Result> entry:lolo.entrySet())
                     {
-//                        if(entry.getKey().equals(name+".$"+arrayCounter))
-//                        {
-                            System.out.println(entry.getKey());
-
-                            if(entry.getValue().isString())
-                                doomed.add(entry.getValue().getStringValue());
-                            else if(entry.getValue().isDouble())
-                                doomed.add(entry.getValue().getDoubleValue());
-                            else if(entry.getValue().isBoolean())
-                                doomed.add(entry.getValue().getBooleanValue());
-//                        }
+                        if(entry.getValue().isString())
+                            doomed.add(entry.getValue().getStringValue());
+                        else if(entry.getValue().isDouble())
+                            doomed.add(entry.getValue().getDoubleValue());
+                        else if(entry.getValue().isBoolean())
+                            doomed.add(entry.getValue().getBooleanValue());
                     }
 
                     jsonReader.endArray();

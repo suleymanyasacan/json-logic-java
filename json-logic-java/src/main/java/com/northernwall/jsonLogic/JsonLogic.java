@@ -156,7 +156,12 @@ public class JsonLogic {
                         case "map":
                             tree = parseMap(jsonReader);
                             break;
-
+                        case "filter":
+                            tree = parseFilter(jsonReader);
+                            break;
+                        case "reduce":
+                            tree = parseReduce(jsonReader);
+                            break;
                         case "none":
                             tree = parseNone(jsonReader);
                             break;
@@ -871,6 +876,66 @@ public class JsonLogic {
         }
         return tree;
     }
+
+    private Node parseFilter(JsonReader jsonReader) throws ParseException {
+        Node tree = null;
+        try {
+
+            JsonToken token = jsonReader.peek();
+            if (token == JsonToken.BEGIN_ARRAY) {
+                jsonReader.beginArray();
+                tree = new FilterNode(parse(jsonReader), parse(jsonReader));
+
+                jsonReader.endArray();
+            }
+        } catch (IOException ex) {
+            throw new ParseException(ex.getMessage(), ex);
+        }
+        return tree;
+    }
+
+    private Node parseReduce(JsonReader jsonReader) throws ParseException {
+        try {
+            JsonToken token = jsonReader.peek();
+            if (null != token) {
+                switch (token) {
+                    case BEGIN_ARRAY:
+                        jsonReader.beginArray();
+                        ReduceNode reduceNode = new ReduceNode(parse(jsonReader), parse(jsonReader));
+                        while (jsonReader.peek() != JsonToken.END_ARRAY) {
+                            reduceNode.add(parse(jsonReader));
+                        }
+                        jsonReader.endArray();
+                        return reduceNode;
+                }
+            }
+        } catch (IOException ex) {
+            throw new ParseException(ex.getMessage(), ex);
+        }
+        return null;
+    }
+
+    /*
+    * try {
+            JsonToken token = jsonReader.peek();
+            if (null != token) {
+                switch (token) {
+                    case BEGIN_ARRAY:
+                        jsonReader.beginArray();
+                        MultiplicationNode multiplicationNode = new MultiplicationNode(parse(jsonReader), parse(jsonReader));
+                        while (jsonReader.peek() != JsonToken.END_ARRAY) {
+                            multiplicationNode.add(parse(jsonReader));
+                        }
+                        jsonReader.endArray();
+                        return multiplicationNode;
+                }
+            }
+        } catch (IOException ex) {
+            throw new ParseException(ex.getMessage(), ex);
+        }
+        return null;
+    *
+    * */
 
     private Node parseNone(JsonReader jsonReader) throws ParseException {
         Node tree = null;

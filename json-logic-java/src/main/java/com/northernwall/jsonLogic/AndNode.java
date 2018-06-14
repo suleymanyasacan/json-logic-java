@@ -24,7 +24,7 @@ import java.util.Map;
 class AndNode extends MultiNode {
 
     AndNode(Node left, Node right) {
-        super(left, right, " && ");
+        super(left, right, "&&");
     }
 
     @Override

@@ -26,7 +26,7 @@ class BetweenEqualsLeftNode extends BinaryNode {
     protected Node middle;
 
     BetweenEqualsLeftNode(Node left, Node middle, Node right) {
-        super(left, right, " <= ");
+        super(left, right, "<=");
         this.middle=middle;
     }
 

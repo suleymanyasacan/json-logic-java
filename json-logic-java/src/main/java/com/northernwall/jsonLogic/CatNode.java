@@ -25,7 +25,7 @@ import java.util.Map;
 class CatNode extends MultiNode {
 
     CatNode() {
-        super(null, null, " cat ");
+        super(null, null, "cat");
 
         nodes=new ArrayList<>();
     }

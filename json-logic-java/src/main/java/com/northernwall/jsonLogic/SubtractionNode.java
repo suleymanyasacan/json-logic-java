@@ -24,7 +24,7 @@ import java.util.Map;
 class SubtractionNode extends BinaryNode {
 
     SubtractionNode(Node left, Node right) {
-        super(left, right, " - ");
+        super(left, right, "-");
     }
 
     @Override

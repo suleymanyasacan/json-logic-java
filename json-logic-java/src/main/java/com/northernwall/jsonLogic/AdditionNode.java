@@ -24,7 +24,7 @@ import java.util.Map;
 class AdditionNode extends MultiNode {
 
     AdditionNode(Node left, Node right) {
-        super(left, right, " + ");
+        super(left, right, "+");
     }
 
     @Override

@@ -24,7 +24,7 @@ import java.util.Map;
 class ModuloNode extends BinaryNode {
 
     ModuloNode(Node left, Node right) {
-        super(left, right, " % ");
+        super(left, right, "%");
     }
 
     @Override

@@ -24,7 +24,7 @@ import java.util.Map;
 class MaxNode extends MultiNode {
 
     MaxNode(Node left, Node right) {
-        super(left, right, " max ");
+        super(left, right, "max");
     }
 
     @Override
