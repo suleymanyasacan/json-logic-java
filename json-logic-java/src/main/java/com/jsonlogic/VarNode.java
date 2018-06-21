@@ -37,8 +37,11 @@ class VarNode extends Node {
 
     @Override
     Result eval(Map<String, Result> data) {
-
-        if (data == null || data.isEmpty() || !data.containsKey(name)) {
+        
+        if(!data.containsKey(name))
+            return new Result(null);
+        
+        if (data == null || data.isEmpty() ) {
             return defaultResult;
         }
         return data.get(name);

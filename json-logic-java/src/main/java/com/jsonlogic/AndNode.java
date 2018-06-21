@@ -32,9 +32,7 @@ class AndNode extends MultiNode {
         Result result = null;
         for (Node node : nodes) {
             result = node.eval(data);
-            if (result.isBoolean() && !result.getBooleanValue()) {
-                return result;
-            }
+            
         }
         return result;
     }

@@ -31,10 +31,8 @@ class GreaterThanNode extends BinaryNode {
     Result eval(Map<String, Result> data) throws EvaluationException {
         Result leftResult = left.eval(data);
         Result rightResult = right.eval(data);
-        if (leftResult.isDouble() && rightResult.isDouble()) {
-            return new Result(leftResult.getDoubleValue() > rightResult.getDoubleValue());
-        }
-        return null;
+    
+        return new Result(leftResult.getDoubleValue() > rightResult.getDoubleValue());
     }
 
 }

@@ -40,6 +40,10 @@ public class Result {
     public boolean isBoolean() {
         return (value instanceof Boolean);
     }
+    
+    public boolean isNull() {
+        return value==null;
+    }
 
     public boolean getBooleanValue() {
         if(!isBoolean())
@@ -70,6 +74,13 @@ public class Result {
     }
 
     public Double getDoubleValue() {
+        
+        if(value==null)
+            return 0.0;
+        
+        if(isString())
+            return Double.valueOf(value.toString());                
+        
         return ((Double)value).doubleValue();
     }
     
@@ -78,6 +89,10 @@ public class Result {
     }
 
     public String getStringValue() {
+        
+        if(isNull())
+            return "";
+        
         if(isDouble())
             return getDoubleValue().longValue() == getDoubleValue() ? "" + getDoubleValue().longValue() : "" + getDoubleValue();
 

@@ -24,13 +24,24 @@ import java.util.Map;
 class NotEqualsNode extends BinaryNode {
 
     NotEqualsNode(Node left, Node right) {
-        super(left, right, " == ");
+        super(left, right, "!=");
     }
 
     @Override
     Result eval(Map<String, Result> data) throws EvaluationException {
         Result leftResult = left.eval(data);
         Result rightResult = right.eval(data);
+        
+        
+        if(leftResult.isNull())
+            return new Result(!rightResult.isNull());
+        else if(rightResult.isNull())
+            return new Result(!leftResult.isNull());
+        
+        
+        if(rightResult.isBoolean() && !rightResult.getBooleanValue())
+            return new Result(false);
+        
         if (leftResult.isBoolean() && rightResult.isBoolean()) {
             return new Result(leftResult.getBooleanValue() != rightResult.getBooleanValue());
         }
@@ -51,12 +62,9 @@ class NotEqualsNode extends BinaryNode {
 
             return new Result(!rightResult.getDoubleValue().equals(temp));
         }
-
-
-
-
-
-
+        
+        if(leftResult.isString())
+            return new Result(!leftResult.getStringValue().equals(rightResult.getStringValue()));
 
         return null;
     }

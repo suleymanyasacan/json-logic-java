@@ -24,17 +24,15 @@ import java.util.Map;
 class GreaterThanEqualsNode extends BinaryNode {
 
     GreaterThanEqualsNode(Node left, Node right) {
-        super(left, right, " >= ");
+        super(left, right, ">=");
     }
 
     @Override
     Result eval(Map<String, Result> data) throws EvaluationException {
         Result leftResult = left.eval(data);
         Result rightResult = right.eval(data);
-        if (leftResult.isDouble() && rightResult.isDouble()) {
-            return new Result(leftResult.getDoubleValue() >= rightResult.getDoubleValue());
-        }
-        return new Result(false );
+        
+        return new Result(leftResult.getDoubleValue() >= rightResult.getDoubleValue());
     }
 
 }

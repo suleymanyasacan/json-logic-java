@@ -36,7 +36,9 @@ class EqualsNode extends BinaryNode {
             return new Result(leftResult.getStringValue().equals(rightResult.getStringValue()));
 
         if (leftResult.isBoolean())
-            if(rightResult.isBoolean()) {
+            if(!leftResult.getBooleanValue())
+                return new Result(false);
+            else if(rightResult.isBoolean()) {
                 return new Result(leftResult.getBooleanValue() == rightResult.getBooleanValue());
             }
             else if(rightResult.isDouble())

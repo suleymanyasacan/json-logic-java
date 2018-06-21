@@ -41,7 +41,9 @@ class ConstantNode extends Node {
 
     @Override
     void treeToString(StringBuilder builder) {
-        if (result.isBoolean()) {
+        if(result.isNull())
+            builder.append("null");            
+        else if (result.isBoolean()) {
             builder.append(result.getBooleanValue());
         } else if (result.isDouble()) {
             builder.append(result.getDoubleValue());

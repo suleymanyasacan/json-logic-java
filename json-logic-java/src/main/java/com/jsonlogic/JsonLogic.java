@@ -67,6 +67,10 @@ public class JsonLogic {
         try {
             JsonToken token = jsonReader.peek();
             switch (token) {
+                case NULL:
+                    jsonReader.nextNull();
+                    tree = new ConstantNode(new Result(null));
+                    break;
                 case BEGIN_OBJECT:
                     jsonReader.beginObject();
                     String operation = jsonReader.nextName();
@@ -199,7 +203,7 @@ public class JsonLogic {
         }
         return tree;
     }
-
+    
     private Node parseEquals(JsonReader jsonReader) throws ParseException {
         Node tree = null;
         try {

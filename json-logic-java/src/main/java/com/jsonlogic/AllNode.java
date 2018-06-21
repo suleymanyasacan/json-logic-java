@@ -33,9 +33,6 @@ class AllNode extends BinaryNode {
     Result eval(Map<String, Result> data) throws EvaluationException{
         Result leftResult = left.eval(data);
 
-        if (!leftResult.isArray())
-            throw new EvaluationException("");
-
         StringBuilder sb=new StringBuilder();
 
         right.treeToString(sb);

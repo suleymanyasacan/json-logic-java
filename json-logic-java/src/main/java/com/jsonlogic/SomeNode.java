@@ -34,7 +34,7 @@ class SomeNode extends BinaryNode {
         Result leftResult = left.eval(data);
 
         if (!leftResult.isArray())
-            throw new EvaluationException("");
+            return new Result(false);        
 
         StringBuilder sb=new StringBuilder();
 
