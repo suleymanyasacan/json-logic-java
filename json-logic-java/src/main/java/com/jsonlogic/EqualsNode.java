@@ -31,6 +31,12 @@ class EqualsNode extends BinaryNode {
     Result eval(Map<String, Result> data) throws EvaluationException {
         Result leftResult = left.eval(data);
         Result rightResult = right.eval(data);
+        
+        if(leftResult.isNull())
+            return new Result(rightResult.isNull());
+        else if(rightResult.isNull())
+            return new Result(leftResult.isNull());
+        
 
         if(leftResult.isString()&&rightResult.isString())
             return new Result(leftResult.getStringValue().equals(rightResult.getStringValue()));

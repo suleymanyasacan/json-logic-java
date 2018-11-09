@@ -76,25 +76,9 @@ class AllNode extends BinaryNode {
                 }
 
             }
-
-
-        }
-
-
-//        for (int i=0;i<rightResult.getArrayValue().size();i++)
-//        {
-//            String s =  rightResult.getArrayValue().get(i).getAsString();
-//
-//            if(!data.containsKey(s))
-//                missingOnes.add(s);
-//            else
-//                found++;
-//
-//            if(found==leftResult.getDoubleValue().intValue())
-//                return new Result(new JsonArray());
-//        }
-
-        return null;
+            
+            return new Result(true);
+        }        
     }
 
     @Override

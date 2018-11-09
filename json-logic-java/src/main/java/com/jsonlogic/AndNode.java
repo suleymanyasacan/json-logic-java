@@ -29,12 +29,15 @@ class AndNode extends MultiNode {
 
     @Override
     Result eval(Map<String, Result> data) throws EvaluationException {
-        Result result = null;
+        
         for (Node node : nodes) {
-            result = node.eval(data);
+            Result result = node.eval(data);
             
+            if(!result.getBooleanValue())
+                return new Result(false);
         }
-        return result;
+        
+        return new Result(true);
     }
 
 }

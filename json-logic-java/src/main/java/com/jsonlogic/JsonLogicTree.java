@@ -63,6 +63,7 @@ public class JsonLogicTree {
             JsonToken token = jsonReader.peek();
             while (token != JsonToken.END_OBJECT) {
                 String name = jsonReader.nextName();
+                //System.out.println(name);
                 readValue(name, jsonReader, temp);
                 token = jsonReader.peek();
             }
@@ -76,6 +77,10 @@ public class JsonLogicTree {
     private void readValue(String name, JsonReader jsonReader, Map<String, Result> temp) throws IOException {
         JsonToken token = jsonReader.peek();
         switch (token) {
+            case NULL:
+                jsonReader.nextNull();
+                temp.put(name, new Result(null));
+                return;
             case NUMBER:
                 temp.put(name, new Result(jsonReader.nextDouble()));
                 return;
