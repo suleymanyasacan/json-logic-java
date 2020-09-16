@@ -1,8 +1,10 @@
 #Equals with Constants
+{"==" : [{"var":"abc"}, false]}	{"abc" : false, "c" : 42}	true
 {"==" : [1, 1]}	true
 {"==" : [1, 3]}	false
 {"==" : [1, "1"]}	true
 {"==" : [0, false]}	true
+
 
 #Strict Equals with Constants
 {"===" : [1, 1]}	true
