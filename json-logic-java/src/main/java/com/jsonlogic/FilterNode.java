@@ -40,29 +40,27 @@ class FilterNode extends BinaryNode {
 
         right.treeToString(sb);
 
-        if(sb.toString().contains("{\"var\":\"\"}"))
+        
+        JsonArray results=new JsonArray();
+
+        for(int i=0;i<leftResult.getArrayValue().size();i++)
         {
-            JsonArray results=new JsonArray();
+            //String afterReplace=sb.toString().replace("{\"var\":\"\"}",leftResult.getArrayValue().get(i).getAsDouble()+"");
 
-            for(int i=0;i<leftResult.getArrayValue().size();i++)
-            {
-                String afterReplace=sb.toString().replace("{\"var\":\"\"}",leftResult.getArrayValue().get(i).getAsDouble()+"");
+            try {
+                Result r=new JsonLogic().apply(sb.toString(),leftResult.getArrayValue().get(i).toString());
 
-                try {
-                    Result r=new JsonLogic().apply(afterReplace,"");
+                if(r.getBooleanValue())
+                    results.add(leftResult.getArrayValue().get(i));
 
-                    if(r.getBooleanValue())
-                        results.add(leftResult.getArrayValue().get(i).getAsDouble());
-
-                }catch (Exception ex){
-                    ex.printStackTrace();
-                }
+            }catch (Exception ex){
+                ex.printStackTrace();
             }
-
-            return new Result(results);
         }
 
-        return null;
+        return new Result(results);
+        
+
     }
 
     @Override

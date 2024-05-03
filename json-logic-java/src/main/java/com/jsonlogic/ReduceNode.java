@@ -41,8 +41,8 @@ class ReduceNode extends MultiNode {
 
         nodes.get(1).treeToString(sb);
 
-        if(!sb.toString().contains("{\"var\":\"current\"}")||!sb.toString().contains("{\"var\":\"accumulator\"}"))
-            throw new EvaluationException("reduce operation missing current or accumulator");
+        if(!sb.toString().contains("{\"var\":\"accumulator\"}"))
+            throw new EvaluationException("reduce operation missing accumulator");
 
         Double accumulator=0.0;
 
@@ -54,10 +54,17 @@ class ReduceNode extends MultiNode {
 
         for(int i=0;i<leftResult.getArrayValue().size();i++)
         {
-            String afterReplace=sb.toString()
+            String afterReplace;
+            if(sb.toString().contains("{\"var\":\"current\"}")){
+                afterReplace=sb.toString()
                     .replace("{\"var\":\"current\"}",leftResult.getArrayValue().get(i).getAsDouble()+"")
                     .replace("{\"var\":\"accumulator\"}",accumulator+"")
                     ;
+            }else{
+                afterReplace=sb.toString()
+                    .replace("{\"var\":\"accumulator\"}",accumulator+"")
+                    ;
+            }
 
             try {
                 Result r=new JsonLogic().apply(afterReplace,"");

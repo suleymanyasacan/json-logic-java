@@ -23,6 +23,7 @@ import com.google.gson.stream.JsonToken;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.*;
+import java.util.regex.Matcher;
 
 /**
  * JsonLogicTree is a reusable representation of a 'JsonLogic' expression.
@@ -131,7 +132,9 @@ public class JsonLogicTree {
                         {
                             if(entry.getKey().startsWith(name+".$"+i))
                             {
-                                String fieldName=entry.getKey().replaceAll("^"+name+"\\.\\$"+i+"\\.","");
+                                String regName = name.replaceAll("\\$", Matcher.quoteReplacement("\\$"));
+
+                                String fieldName=entry.getKey().replaceAll("^"+regName+"\\.\\$"+i+"\\.","");
 
                                 if(entry.getValue().isString())
                                     jj.addProperty(fieldName,entry.getValue().getStringValue());
@@ -139,6 +142,10 @@ public class JsonLogicTree {
                                     jj.addProperty(fieldName,entry.getValue().getDoubleValue());
                                 else if(entry.getValue().isBoolean())
                                     jj.addProperty(fieldName,entry.getValue().getBooleanValue());
+                                else if(entry.getValue().isNull())
+                                    jj.add(fieldName,null);
+                                else if(entry.getValue().isArray())
+                                    jj.add(fieldName,entry.getValue().getArrayValue());
                             }
                         }
 
@@ -160,6 +167,9 @@ public class JsonLogicTree {
                             doomed.add(entry.getValue().getDoubleValue());
                         else if(entry.getValue().isBoolean())
                             doomed.add(entry.getValue().getBooleanValue());
+                     
+                        else if(entry.getValue().isArray())
+                            doomed.add(entry.getValue().getArrayValue());
                     }
 
                     jsonReader.endArray();
